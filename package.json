@@ -3,6 +3,10 @@
     "displayName": "JuliaHub-Welcome",
     "description": "Welcome page for code instances on JuliaHub",
     "version": "0.0.1",
+    "publisher": "JuliaComputing",
+    "bugs": "https://github.com/JuliaComputing/JuliaHub/issues",
+    "homepage": "https://juliahub.com",
+    "license": "SEE LICENSE IN LICENSE.md",
     "engines": {
         "vscode": "^1.52.0"
     },

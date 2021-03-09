@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as welcome from './welcome'
 
-const shutdownWarnInterval = 30000 // ms
+const shutdownWarnInterval = 55000 // ms
 let shutdownWarner: NodeJS.Timeout|undefined = undefined
 
 export function activate(context: vscode.ExtensionContext) {
@@ -17,16 +17,19 @@ function shutdownWarn() {
         if (diffInMinutes < 0 && shutdownWarner) {
             clearInterval(shutdownWarner)
         }
+        console.debug(`Instance shutdown in ${Math.round(diffInMinutes)} minutes...`)
         let timeout = 0
         for (const threshold of thresholds.reverse()) {
-            if (diffInMinutes < threshold) {
+            if (Math.abs(threshold - diffInMinutes) <= 1) {
                 timeout = threshold
                 break
             }
         }
 
         // TODO: would be nice to add a button here to extend the time limit:
-        vscode.window.showWarningMessage(`This session will time out in ${timeout} minutes. Make sure to backup your work or extend the time limit on JuliaHub.`)
+        if (timeout > 0) {
+            vscode.window.showWarningMessage(`This session will time out in ${timeout} minutes. Make sure to backup your work or extend the time limit on JuliaHub.`)
+        }
     }
 }
 
