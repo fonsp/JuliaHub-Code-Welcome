@@ -28,7 +28,12 @@ function shutdownWarn() {
 
         // TODO: would be nice to add a button here to extend the time limit:
         if (timeout > 0) {
-            vscode.window.showWarningMessage(`This session will time out in ${timeout} minutes. Make sure to backup your work or extend the time limit on JuliaHub.`)
+            const msg = `This session will time out in ${timeout} minutes. Make sure to backup your work or extend the time limit on JuliaHub.`
+            if (timeout > 5) {
+                vscode.window.showWarningMessage(msg)
+            } else {
+                vscode.window.showErrorMessage(msg)
+            }
         }
     }
 }
