@@ -1,5 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
+import { env } from 'process'
+import { existsSync, readFileSync } from 'fs'
 
 export function activate(context: vscode.ExtensionContext) {
     let panel: vscode.WebviewPanel | null = null
@@ -7,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
     const showWelcomeScreen = () => {
         panel = vscode.window.createWebviewPanel(
             'juliahub-welcome-pane',
-            'Welcome to JuliaHub',
+            'Welcome',
             vscode.ViewColumn.One,
             {
                 enableCommandUris: true,
@@ -47,6 +49,25 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function getWebviewContent(showOnStartup = true) {
+    let content = `
+    <h1>Welcome to JuliaHub</h1>
+    <p>
+        <a href="command:juliahub:Show-JuliaHub-Pane">Show JuliaHub connector</a>
+    </p>
+    <p>
+        <a href="https://docs.juliahub.com/">Show Help</a>
+    </p>`
+
+    try {
+        const welcomeContentFile = process.env['JH_WELCOME_CONTENT']
+        if (welcomeContentFile && existsSync(welcomeContentFile)) {
+            content = readFileSync(welcomeContentFile).toString()
+        }
+    } catch (err) {
+        console.log(err)
+    }
+
+
     return `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -63,13 +84,7 @@ function getWebviewContent(showOnStartup = true) {
     </style>
     </head>
     <body>
-        <h1>Welcome to JuliaHub</h1>
-        <p>
-            <a href="command:juliahub:Show-JuliaHub-Pane">Show JuliaHub connector</a>
-        </p>
-        <p>
-            <a href="https://docs.juliahub.com/">Show Help</a>
-        </p>
+        ${content}
         <p>
             <input
                 id="show-on-startup"
