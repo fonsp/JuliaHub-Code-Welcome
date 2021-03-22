@@ -1,0 +1,3 @@
+[submodule "scripts/packages/JuliaHubClient"]
+	path = scripts/packages/JuliaHubClient
+	url = git@github.com:JuliaComputing/JuliaHubClient.jl.git
