@@ -51,12 +51,31 @@ export function activate(context: vscode.ExtensionContext) {
 function getWebviewContent(showOnStartup = true) {
     let content = `
     <h1>Welcome to JuliaHub</h1>
+    <h2>Julia</h2>
     <p>
-        <a href="command:juliahub:Show-JuliaHub-Pane">Show JuliaHub connector</a>
+        <div>
+            <a href="command:language-julia.startREPL">Start REPL</a>
+        </div>
+        <div>
+            <a href="command:REPLVariables.focus">Show Workspace</a>
+        </div>
     </p>
     <p>
-        <a href="https://docs.juliahub.com/">Show Help</a>
-    </p>`
+        <div>
+            <a href="https://docs.julialang.org/en/v1/">Julia Documentation</a>
+        </div>
+        <div>
+            <a href="https://www.julia-vscode.org/docs/stable/">Extension Documentation</a>
+        </div>
+    </p>
+
+    <h2>JuliaHub</h2>
+    <div>
+        <a href="command:juliahub:Show-JuliaHub-Pane">Show JuliaHub connector</a>
+    </div>
+    <div>
+        <a href="https://docs.juliahub.com/">Documentation</a>
+    </div>`
 
     try {
         const welcomeContentFile = process.env['JH_WELCOME_CONTENT']
@@ -80,6 +99,9 @@ function getWebviewContent(showOnStartup = true) {
         }
         a:hover {
             text-decoration: underline;
+        }
+        h2, h3, h4, h5 {
+            font-weight: 400;
         }
     </style>
     </head>
