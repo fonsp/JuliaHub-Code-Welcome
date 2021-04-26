@@ -2,7 +2,7 @@
     "name": "juliahub-welcome",
     "displayName": "JuliaHub-Welcome",
     "description": "Welcome page for code instances on JuliaHub",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "publisher": "JuliaComputing",
     "bugs": "https://github.com/JuliaComputing/JuliaHub/issues",
     "homepage": "https://juliahub.com",

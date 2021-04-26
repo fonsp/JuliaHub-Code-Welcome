@@ -131,8 +131,9 @@ async function extendTimeLimit() {
                 const tomlFile = await fs.readFile(META_TOML_PATH)
                 const content = TOML.parse(tomlFile.toString())
                 content['stop_time'] = stopTime.setTime(stopTime.getTime() + parseInt(extendBy)*60*60*1000)
+                await fs.writeFile(META_TOML_PATH, TOML.stringify(content))
             } catch (err) {
-                console.log('Could not read job stop time from meta.toml.', err)
+                console.log('Could not write job stop time to meta.toml.', err)
             }
             return
         } else {
