@@ -1,3 +1,7 @@
 [deps]
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 JuliaHubClient = "a1216acd-9fc2-4d5e-aac3-a28721b16c80"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+
+[compat]
+JSON = "0.20, 0.21"

@@ -1,6 +1,7 @@
-using Pkg
+using Pkg, Logging
 
-Pkg.instantiate()
+Logging.global_logger(NullLogger())
+Pkg.instantiate(io = devnull)
 
 using JuliaHubClient, JSON
 
@@ -8,13 +9,20 @@ auth, _ = JuliaHubClient.authenticate()
 try
     r = JuliaHubClient.extend_job(ARGS[1], parse(Int, ARGS[2]); auth = auth)
 
-    JSON.print(stdout, Dict(
+    JSON.print(stderr, Dict(
         "success" => r["success"],
         "message" => r["message"]
     ))
 catch err
-    JSON.print(stdout, Dict(
+    msg = "Unknown Error."
+    if err isa JuliaHubClient.RequestError
+        msg = string("Request failed:\n", err.msg)
+    elseif err isa JuliaHubClient.AuthError
+        msg = string("Authentication failed:\n", err.msg)
+    end
+
+    return JSON.print(stderr, Dict(
         "success" => false,
-        "message" => err
+        "message" => msg
     ))
 end

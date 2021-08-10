@@ -31,7 +31,7 @@ export async function activate(context: vscode.ExtensionContext) {
     shutdownWarner = setInterval(shutdownWarn, shutdownWarnInterval)
 }
 
-const thresholds = [30, 15, 10, 5, 4, 3, 2, 1]
+const thresholds = [30, 15, 10, 5, 2, 1]
 async function shutdownWarn() {
     const stopTimeStamp = await getStopTime()
     if (stopTimeStamp) {
@@ -39,7 +39,6 @@ async function shutdownWarn() {
         if (diffInMinutes < 0 && shutdownWarner) {
             clearInterval(shutdownWarner)
         }
-        console.debug(`Instance shutdown in ${Math.round(diffInMinutes)} minutes...`)
         let timeout = 0
         for (const threshold of thresholds.reverse()) {
             if (Math.abs(threshold - diffInMinutes) <= 1) {
@@ -48,7 +47,9 @@ async function shutdownWarn() {
             }
         }
 
+
         if (timeout > 0) {
+            console.debug(`Instance shutdown in ${Math.round(diffInMinutes)} minutes...`)
             vscode.window.showWarningMessage(
                 `This session will time out in ${timeout} minutes. Make sure to backup your work or extend the time limit on JuliaHub.`,
                 {
@@ -118,11 +119,11 @@ async function extendTimeLimit() {
             env['JULIA_PKG_SERVER'] = pkgServer
         }
 
-        const { stdout } = await promisify(exec)(`"${juliaPath}" --project="${extendJobEnvPath}" "${extendJobPath}" "${jobName}" "${extendBy}"`, {
+        const { stderr } = await promisify(exec)(`"${juliaPath}" --project="${extendJobEnvPath}" "${extendJobPath}" "${jobName}" "${extendBy}"`, {
             env: env
         })
 
-        const response = JSON.parse(stdout)
+        const response = JSON.parse(stderr)
 
         if (response.success) {
             vscode.window.showInformationMessage(`Successfully extended this interactive job by ${extendBy} hours.`)
@@ -130,14 +131,15 @@ async function extendTimeLimit() {
             try {
                 const tomlFile = await fs.readFile(META_TOML_PATH)
                 const content = TOML.parse(tomlFile.toString())
-                content['stop_time'] = stopTime.setTime(stopTime.getTime() + parseInt(extendBy)*60*60*1000)
+                stopTime.setTime(stopTime.getTime() + parseInt(extendBy)*60*60*1000)
+                content['stop_time'] = stopTime.toJSON()
                 await fs.writeFile(META_TOML_PATH, TOML.stringify(content))
             } catch (err) {
                 console.log('Could not write job stop time to meta.toml.', err)
             }
             return
         } else {
-            vscode.window.showErrorMessage(`Failed to extend job time limit: ${stdout}`)
+            vscode.window.showErrorMessage(`Failed to extend job time limit: ${stderr}`)
         }
     } catch (err) {
         console.log(err)
