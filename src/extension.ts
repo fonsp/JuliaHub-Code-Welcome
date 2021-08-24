@@ -20,8 +20,12 @@ export async function activate(context: vscode.ExtensionContext) {
         const juliaExt = vscode.extensions.getExtension('julialang.language-julia') || vscode.extensions.getExtension('julialang.language-julia-insider')
         if (juliaExt) {
             juliaAPI = juliaExt.exports
-            if (juliaAPI && juliaAPI.getJuliaPath) {
-                juliaPath = await juliaAPI.getJuliaPath()
+            if (juliaAPI) {
+                if (juliaAPI.version <= 2) {
+                    juliaPath = await juliaAPI.getJuliaPath()
+                } else if (juliaAPI.version === 3) {
+                    juliaPath = (await juliaAPI.getJuliaExecutable()).file
+                }
             }
         }
     } catch (err) {

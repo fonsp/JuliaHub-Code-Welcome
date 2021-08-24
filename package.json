@@ -2,7 +2,7 @@
     "name": "juliahub-welcome",
     "displayName": "JuliaHub-Welcome",
     "description": "Welcome page for code instances on JuliaHub",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "publisher": "JuliaComputing",
     "bugs": "https://github.com/JuliaComputing/JuliaHub/issues",
     "homepage": "https://juliahub.com",
@@ -58,6 +58,7 @@
         "@iarna/toml": "^2.2.5"
     },
     "extensionDependencies": [
-        "julialang.language-julia"
+        "julialang.language-julia",
+        "JuliaComputing.juliahub"
     ]
 }
